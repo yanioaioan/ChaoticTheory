@@ -51,7 +51,7 @@ protected:
     void wheelEvent(QWheelEvent *_event);
 
 
-    void loamatricestoShader();
+    void loamatricestoShader(const ngl::Colour &color);
     void initializeGL ();
     void resizeGL (int _w, int _h);
     void paintGL ();
@@ -62,7 +62,7 @@ private:
     const double R = 28.0;
     const double b = 8.0 / 3.0;
 
-    std::vector<state_type> valuePoints;
+//    std::vector<state_type> m_valuePoints;
 
 
     ngl::Camera *m_cam;
@@ -107,6 +107,8 @@ private:
     QOpenGLContext *m_context;
 
 
+    std::vector<float> m_oneDSolverPointsEuler;
+    std::vector<float> m_oneDSolverPointsRungeKutta6;
 
 signals:
     void clicked(bool);

@@ -33,7 +33,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = ChaoticTheory1.0.0
-DISTDIR = /home/yioannidis/QtStuff/Projects/JustASimpleQtGui/JustASimpleQtGui/obj/ChaoticTheory1.0.0
+DISTDIR = /home/yioannidis/QtStuff/Projects/ChaoticTheory/ChaoticTheory/obj/ChaoticTheory1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/opt/qt/5.5/gcc_64 -Wl,-rpath,/opt/qt/5.5/gcc_64/lib
 LIBS          = $(SUBLIBS) -L/$(HOME)/NGL/lib -l NGL -L/opt/qt/5.5/gcc_64/lib -lQt5OpenGL -L/usr/lib64 -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
@@ -51,20 +51,24 @@ OBJECTS_DIR   = obj/
 SOURCES       = src/lorrenzattractor.cpp \
 		src/main.cpp \
 		src/mainwindow.cpp \
-		src/nglscene.cpp moc_mainwindow.cpp \
+		src/nglscene.cpp \
+		src/OneDSolver.cpp moc_mainwindow.cpp \
 		moc_nglscene.cpp
 OBJECTS       = obj/lorrenzattractor.o \
 		obj/main.o \
 		obj/mainwindow.o \
 		obj/nglscene.o \
+		obj/OneDSolver.o \
 		obj/moc_mainwindow.o \
 		obj/moc_nglscene.o
 DIST          = ChaoticTheory.pro include/lorrenzattractor.h \
 		include/mainwindow.h \
-		include/nglscene.h src/lorrenzattractor.cpp \
+		include/nglscene.h \
+		include/OneDSolver.h src/lorrenzattractor.cpp \
 		src/main.cpp \
 		src/mainwindow.cpp \
-		src/nglscene.cpp
+		src/nglscene.cpp \
+		src/OneDSolver.cpp
 QMAKE_TARGET  = ChaoticTheory
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = ChaoticTheory
@@ -382,8 +386,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents include/lorrenzattractor.h include/mainwindow.h include/nglscene.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/lorrenzattractor.cpp src/main.cpp src/mainwindow.cpp src/nglscene.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents include/lorrenzattractor.h include/mainwindow.h include/nglscene.h include/OneDSolver.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/lorrenzattractor.cpp src/main.cpp src/mainwindow.cpp src/nglscene.cpp src/OneDSolver.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -559,7 +563,7 @@ moc_mainwindow.cpp: /opt/qt/5.5/gcc_64/include/QtWidgets/QMainWindow \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/qopenglwidget.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/QWidget \
 		include/mainwindow.h
-	/opt/qt/5.5/gcc_64/bin/moc $(DEFINES) -I/opt/qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/yioannidis/QtStuff/Projects/JustASimpleQtGui/JustASimpleQtGui -I/home/yioannidis/NGL/include -I/home/yioannidis/QtStuff/Projects/JustASimpleQtGui/JustASimpleQtGui/include -I/opt/qt/5.5/gcc_64/include -I/opt/qt/5.5/gcc_64/include/QtOpenGL -I/opt/qt/5.5/gcc_64/include/QtWidgets -I/opt/qt/5.5/gcc_64/include/QtGui -I/opt/qt/5.5/gcc_64/include/QtCore include/mainwindow.h -o moc_mainwindow.cpp
+	/opt/qt/5.5/gcc_64/bin/moc $(DEFINES) -I/opt/qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/yioannidis/QtStuff/Projects/ChaoticTheory/ChaoticTheory -I/home/yioannidis/NGL/include -I/home/yioannidis/QtStuff/Projects/ChaoticTheory/ChaoticTheory/include -I/opt/qt/5.5/gcc_64/include -I/opt/qt/5.5/gcc_64/include/QtOpenGL -I/opt/qt/5.5/gcc_64/include/QtWidgets -I/opt/qt/5.5/gcc_64/include/QtGui -I/opt/qt/5.5/gcc_64/include/QtCore include/mainwindow.h -o moc_mainwindow.cpp
 
 moc_nglscene.cpp: ../../../../NGL/include/ngl/Random.h \
 		../../../../NGL/include/ngl/Colour.h \
@@ -705,7 +709,7 @@ moc_nglscene.cpp: ../../../../NGL/include/ngl/Random.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/qopenglwidget.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/QWidget \
 		include/nglscene.h
-	/opt/qt/5.5/gcc_64/bin/moc $(DEFINES) -I/opt/qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/yioannidis/QtStuff/Projects/JustASimpleQtGui/JustASimpleQtGui -I/home/yioannidis/NGL/include -I/home/yioannidis/QtStuff/Projects/JustASimpleQtGui/JustASimpleQtGui/include -I/opt/qt/5.5/gcc_64/include -I/opt/qt/5.5/gcc_64/include/QtOpenGL -I/opt/qt/5.5/gcc_64/include/QtWidgets -I/opt/qt/5.5/gcc_64/include/QtGui -I/opt/qt/5.5/gcc_64/include/QtCore include/nglscene.h -o moc_nglscene.cpp
+	/opt/qt/5.5/gcc_64/bin/moc $(DEFINES) -I/opt/qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/yioannidis/QtStuff/Projects/ChaoticTheory/ChaoticTheory -I/home/yioannidis/NGL/include -I/home/yioannidis/QtStuff/Projects/ChaoticTheory/ChaoticTheory/include -I/opt/qt/5.5/gcc_64/include -I/opt/qt/5.5/gcc_64/include/QtOpenGL -I/opt/qt/5.5/gcc_64/include/QtWidgets -I/opt/qt/5.5/gcc_64/include/QtGui -I/opt/qt/5.5/gcc_64/include/QtCore include/nglscene.h -o moc_nglscene.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1035,55 +1039,7 @@ obj/mainwindow.o: src/mainwindow.cpp include/mainwindow.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/QOpenGLWidget \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/qopenglwidget.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/QWidget \
-		ui_mainwindow.h \
-		/opt/qt/5.5/gcc_64/include/QtCore/QVariant \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QAction \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qaction.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qactiongroup.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QApplication \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qapplication.h \
-		/opt/qt/5.5/gcc_64/include/QtCore/qcoreapplication.h \
-		/opt/qt/5.5/gcc_64/include/QtCore/qeventloop.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		/opt/qt/5.5/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/qt/5.5/gcc_64/include/QtGui/qinputmethod.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QButtonGroup \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qbuttongroup.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QDoubleSpinBox \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qspinbox.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qabstractspinbox.h \
-		/opt/qt/5.5/gcc_64/include/QtGui/qvalidator.h \
-		/opt/qt/5.5/gcc_64/include/QtCore/qregularexpression.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QGridLayout \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qgridlayout.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qlayout.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qlayoutitem.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qboxlayout.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QGroupBox \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qgroupbox.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qframe.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QHeaderView \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qheaderview.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qabstractitemview.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qabstractscrollarea.h \
-		/opt/qt/5.5/gcc_64/include/QtCore/qabstractitemmodel.h \
-		/opt/qt/5.5/gcc_64/include/QtCore/qitemselectionmodel.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qstyleoption.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qslider.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qabstractslider.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qstyle.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qtabbar.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qrubberband.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QMenuBar \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qmenubar.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qmenu.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QPushButton \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qpushbutton.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qabstractbutton.h \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QSpacerItem \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/QStatusBar \
-		/opt/qt/5.5/gcc_64/include/QtWidgets/qstatusbar.h
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/mainwindow.o src/mainwindow.cpp
 
 obj/nglscene.o: src/nglscene.cpp include/nglscene.h \
@@ -1231,8 +1187,12 @@ obj/nglscene.o: src/nglscene.cpp include/nglscene.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/qopenglwidget.h \
 		/opt/qt/5.5/gcc_64/include/QtWidgets/QWidget \
 		../../../../NGL/include/ngl/NGLInit.h \
-		include/lorrenzattractor.h
+		include/lorrenzattractor.h \
+		include/OneDSolver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/nglscene.o src/nglscene.cpp
+
+obj/OneDSolver.o: src/OneDSolver.cpp include/OneDSolver.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/OneDSolver.o src/OneDSolver.cpp
 
 obj/moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_mainwindow.o moc_mainwindow.cpp

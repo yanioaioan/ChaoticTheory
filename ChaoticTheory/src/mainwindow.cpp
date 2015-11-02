@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_gl=new NGLScene();
     ui->gridLayout->addWidget (m_gl,0,0,2,1);
 
-    this->setWindowTitle("Chaotic Theory Lorrenz Attractor");
+    this->setWindowTitle("Chaotic Theory Lorrenz Attractor & 1D ODE Solver test euler,RungeKutta 6th order");
 
 
     //manual signal-slot connection

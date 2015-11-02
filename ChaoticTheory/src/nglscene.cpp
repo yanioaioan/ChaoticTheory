@@ -2,13 +2,14 @@
 #include <iostream>
 #include <ngl/NGLInit.h>
 #include "lorrenzattractor.h"
+#include "OneDSolver.h"
 
 #include <boost/array.hpp>
 #include <boost/numeric/odeint.hpp>
 
 const static float INCREMENT=0.01;
 
-const static float ZOOM=0.1;
+const static float ZOOM=1;
 #define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
 
 
@@ -44,7 +45,7 @@ void NGLScene::lorenz( const state_type &x , state_type &dxdt , double t )
 void NGLScene::write_lorenz( const state_type &x , const double t )
 {
     cout << /*t <<*/ '\t' << x[0] << '\t' << x[1] << '\t' << x[2] << endl;
-    valuePoints.push_back(x);
+//    m_valuePoints.push_back(x);
 
 }
 
@@ -60,6 +61,22 @@ struct wrapper
 };
 
 
+
+#define EULER    0
+#define MODIFIED_EULER    1
+#define HEUNS    2
+#define MIDPOINT 3
+#define RUNGEKUTTA_4 4
+#define RUNGEKUTTA_6 5
+
+//      Dx/Dt=5x−3
+double EvalFcn(double x)
+{
+
+//    return 5*x-3;
+    return(-0.05 * x);
+}
+
 void NGLScene::initializeGL ()
 {
 
@@ -74,9 +91,35 @@ void NGLScene::initializeGL ()
     state_type x = { 10.0 , 1.0 , 1.0 }; // initial conditions
     integrate( wrapper(lAttractor), x, 0.0 , 25.0 , 0.1 /*, write_lorenz */);
 
-//    std::bind(&MotionGenerator::motionScheme, std::ref(*this) , pl::_1 , pl::_2 , pl::_3 ) , init_conf, 0.0, 1.0, 0.05, plot);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// \brief Added of a external case for 1D Solver integration tested visually
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///
+    ///
+    //      Dx/Dt=5x−3
+    //
 
 
+    double t;
+    double dt=1;    /* Step size            */
+    double T=100;     /* Simulation duration  */
+    double y = 1;     /* Initial value        */
+    double y2 = 1;
+
+    OneDSolver s;
+    for (t=0.1;t<T;t+=dt)
+    {
+       printf("%g %g\n",t,y);
+       y = s.Solver1D(dt,y,EULER,(double (*)(double))EvalFcn);
+       y2 = s.Solver1D(dt,y2,RUNGEKUTTA_6,(double (*)(double))EvalFcn);
+
+       m_oneDSolverPointsEuler.push_back(y*50);
+       m_oneDSolverPointsRungeKutta6.push_back(y2*50);
+
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     glClearColor(0.4f, 0.4f, 0.4f, 1.0f);			   // Grey Background
@@ -126,7 +169,7 @@ void NGLScene::initializeGL ()
     // Now we will create a basic Camera from the graphics library
     // This is a static camera so it only needs to be set once
     // First create Values for the camera position
-    ngl::Vec3 from(1,1,150);
+    ngl::Vec3 from(1,1,15);
     ngl::Vec3 to(0,0,0);
     ngl::Vec3 up(0,1,0);
     // now load to our new camera
@@ -135,11 +178,10 @@ void NGLScene::initializeGL ()
     // The final two are near and far clipping planes of 0.5 and 10
     m_cam->setShape(45,(float)720.0/576.0,0.05,350);
 
-
     // now create the primitives to draw
     ngl::VAOPrimitives *prim=ngl::VAOPrimitives::instance();
 
-    prim->createSphere("sphere",0.4,80);
+    prim->createSphere("sphere",0.4,10);
 
     // as re-size is not explicitly called we need to do this.
     glViewport(0,0,width(),height());
@@ -157,7 +199,7 @@ void NGLScene::resizeGL(int w, int h)
 
 }
 
-void NGLScene::loamatricestoShader()
+void NGLScene::loamatricestoShader(const ngl::Colour & color)
 {
     ngl::ShaderLib *shader=ngl::ShaderLib::instance();
 
@@ -178,7 +220,7 @@ void NGLScene::loamatricestoShader()
 
     shader->setShaderParamFromMat4("MVP",MVP);
     shader->setShaderParamFromMat3("normalMatrix",normalMatrix);
-    shader->setRegisteredUniformFromColour("Colour",ngl::Colour(1,0,0,1));
+    shader->setRegisteredUniformFromColour("Colour",color);
 }
 
 void NGLScene::paintGL ()
@@ -249,10 +291,29 @@ void NGLScene::paintGL ()
     {
         m_transform.reset();
         m_transform.setPosition( (*it)[0],(*it)[1],(*it)[2] );
-        loamatricestoShader();
+        loamatricestoShader(ngl::Colour(1,0,0,1));
         prim->draw("sphere");
-
     }
+
+
+    for(std::vector<float>::iterator it=m_oneDSolverPointsEuler.begin();it!=m_oneDSolverPointsEuler.end();it++)
+    {
+        m_transform.reset();
+        m_transform.setPosition( *it,-2 ,0 );
+        loamatricestoShader(ngl::Colour(0,1,0,1));
+        prim->draw("sphere");
+    }
+
+    for(std::vector<float>::iterator it=m_oneDSolverPointsRungeKutta6.begin();it!=m_oneDSolverPointsRungeKutta6.end();it++)
+    {
+
+        m_transform.reset();
+        m_transform.setPosition( *it,-3 ,0 );
+        loamatricestoShader(ngl::Colour(1,1,0,1));
+        prim->draw("sphere");
+    }
+
+
 
 }
 
