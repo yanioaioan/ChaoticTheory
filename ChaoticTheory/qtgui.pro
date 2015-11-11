@@ -20,3 +20,4 @@ OBJECTS_DIR+=obj
 LIBS += -L/$(HOME)/NGL/lib -l NGL
 INCLUDEPATH += $$(HOME)/NGL/include/
 INCLUDEPATH +=$$PWD/include
+CONFIG +=c++11
